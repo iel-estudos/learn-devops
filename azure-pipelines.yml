@@ -1,0 +1,16 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: ubuntu-18.04
+
+variables:
+  configuration.dockerhub.token: asdasdas
+
+stages:
+- template: azure-pipelines/ci.yml
+#- template: azure-pipelines/cd-dev.yml
+#- template: azure-pipelines/cd-hml.yml
+#- template: azure-pipelines/cd-prd.yml

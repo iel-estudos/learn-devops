@@ -1,0 +1,80 @@
+version: '3'
+
+networks: 
+  learndevops-netwrork:
+    driver: 'bridge'
+
+services:
+
+  nginx:
+    container_name: learn-devops-nginx
+    restart: always
+    build: 
+      dockerfile: Dockerfile 
+      context: ../nginx/
+    depends_on: 
+      - client1
+      - client2
+      - client3
+    ports: 
+      - '3050:80'
+    networks:
+      - learndevops-netwrork
+
+  client1:
+    container_name: learn-devops-client1
+    build:
+      context: ../src/LearnAzureDevOps
+      dockerfile: Dockerfile
+    volumes:    
+      - ./client:/app
+    depends_on: 
+      - redis
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports: 
+      - "5000:80"
+    networks:
+      - learndevops-netwrork
+  
+  client2:
+    container_name: learn-devops-client2
+    build:
+      context: ../src/LearnAzureDevOps
+      dockerfile: Dockerfile
+    volumes:    
+      - ./client:/app
+    depends_on: 
+      - redis
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports: 
+      - "5001:80"
+    networks:
+      - learndevops-netwrork
+
+  client3:
+    container_name: learn-devops-client3
+    build:
+      context: ../src/LearnAzureDevOps
+      dockerfile: Dockerfile
+    volumes:    
+      - ./client:/app
+    depends_on: 
+      - redis
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports: 
+      - "5002:80"
+    networks:
+      - learndevops-netwrork
+
+  redis:
+    container_name: learn-devops-redis
+    image: 'redis:latest'
