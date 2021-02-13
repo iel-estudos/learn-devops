@@ -54,7 +54,7 @@ stages:
              repository: $(app.imageName)
              command: build
              Dockerfile: $(app.root)/LearnAzureDevOps/Dockerfile
-            #  tags: 'v$(Build.BuildNumber)' 
+             tags: 'v$(Build.BuildNumber)' 
 
           - task: Docker@2
             displayName: docker push image
@@ -63,4 +63,4 @@ stages:
               containerRegistry: cd-docker-hub
               repository: $(app.imageName)
               includeLatestTag: true
-            #  tags: 'v$(Build.BuildNumber)'              
+              tags: 'v$(Build.BuildNumber)'              

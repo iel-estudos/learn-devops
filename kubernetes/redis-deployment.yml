@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-deployment
+  name: redis-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: web
+      component: redis
   template:
     metadata:
       labels:
-        app: web
+        component: redis
     spec:
       containers:
-      - name: client
-        image: iel182/estudo-docker:v20210208.1
-        resources:
+        - name: redis
+          image: redis
+          resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
-        ports:
-        - containerPort: 3000
+          ports:
+            - containerPort: 6379

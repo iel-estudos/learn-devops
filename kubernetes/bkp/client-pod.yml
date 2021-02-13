@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: client
-    image: iel182/estudo-docker
+    image: iel182/estudo-docker:v20210208.1
     resources:
       limits:
         memory: "128Mi"
