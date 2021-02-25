@@ -2,15 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client-deployment
+  labels:
+    app: web
 spec:
   replicas: 3
   selector:
     matchLabels:
-      component: web
+      app: web
   template:
     metadata:
       labels:
-        component: web
+        app: web
     spec:
       containers:
       - name: client
@@ -20,4 +22,4 @@ spec:
               memory: "128Mi"
               cpu: "500m"
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
