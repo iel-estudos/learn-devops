@@ -2,24 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client-deployment
-  labels:
-    app: web
+  namespace: learn-devops
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: web
+      component: web
   template:
     metadata:
       labels:
-        app: web
+        component: web
     spec:
       containers:
-      - name: client
-        image: iel182/estudo-docker:v20210208.1
-        resources:
+        - name: client
+          image: iel182/estudo-docker:v20210208.1
+          resources:
             limits:
-              memory: "128Mi"
-              cpu: "500m"
-        ports:
-        - containerPort: 8080
+              memory: "80Mi"
+              cpu: "150m"
+          ports:
+            - containerPort: 80
