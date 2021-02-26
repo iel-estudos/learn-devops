@@ -7,8 +7,7 @@ stages:
         value: "iel182/estudo-docker"
 
       - name: cacheImages
-        type: string
-        default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
+        value: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
 
     jobs:
       - job: Build
