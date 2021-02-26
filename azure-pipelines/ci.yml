@@ -6,8 +6,10 @@ stages:
       - name: app.imageName
         value: "iel182/estudo-docker"
 
-      - name: cacheImages
-        value: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
+parameters:
+  - name: cacheImages
+    type: string
+    default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
 
     jobs:
       - job: Build
