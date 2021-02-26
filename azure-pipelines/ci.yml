@@ -28,7 +28,7 @@ stages:
               docker load < $(Pipeline.Workspace)/docker/aspnet5.tar
               docker load < $(Pipeline.Workspace)/docker/sdk5.tar
             condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
-            displayName: Load from cache
+            displayName: docker load cache
 
           - script: |
               mkdir -p $(Pipeline.Workspace)/docker
@@ -37,7 +37,7 @@ stages:
               docker save mcr.microsoft.com/dotnet/aspnet:5.0 > $(Pipeline.Workspace)/docker/aspnet5.tar
               docker save mcr.microsoft.com/dotnet/sdk:5.0 > $(Pipeline.Workspace)/docker/sdk5.tar
             condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-            displayName: Pull and Save Cache
+            displayName: docker image cache
 
           - task: UseDotNet@2
             displayName: dotnet install
