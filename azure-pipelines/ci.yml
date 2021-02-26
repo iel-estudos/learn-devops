@@ -30,7 +30,7 @@ stages:
             condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
 
           - script: |
-              mkdir -p $(Pipeline.Workspace)/dockerImages
+              mkdir $(Pipeline.Workspace)/dockerImages
               for fn in ${{ parameters.cacheImages }}
               do
                 docker pull -q $fn
