@@ -20,22 +20,22 @@ stages:
           - task: Cache@2
             inputs:
               key: docker | **/Dockerfile | "${{ parameters.cacheImages }}"
-              path: $(Pipeline.Workspace)/docker
+              path: $(Pipeline.Workspace)/dockerImages
               cacheHitVar: DOCKER_CACHE_RESTORED
             displayName: Cache Docker images
 
           - script: |
-              gunzip -c $(Pipeline.Workspace)/docker/cache.tar.gz | docker load
+              gunzip -c $(Pipeline.Workspace)/dockerImages/cache.tar.gz | docker load
             displayName: Restore Docker image cache
             condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
 
           - script: |
-              mkdir -p $(Pipeline.Workspace)/docker
+              mkdir -p $(Pipeline.Workspace)/dockerImages
               for fn in ${{ parameters.cacheImages }}
               do
                 docker pull -q $fn
               done
-              docker save ${{ parameters.cacheImages }} | gzip -9c &gt; $(Pipeline.Workspace)/docker/cache.tar.gz
+              docker save ${{ parameters.cacheImages }} | gzip -9c &gt; $(Pipeline.Workspace)/dockerImages/cache.tar.gz
             displayName: Populate docker image cache
             condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
 
