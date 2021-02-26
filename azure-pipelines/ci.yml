@@ -19,24 +19,22 @@ stages:
 
           - task: Cache@2
             inputs:
-              key: docker | **/Dockerfile | "${{ parameters.cacheImages }}"
-              path: $(Pipeline.Workspace)/dockerImages
+              key: 'docker | "$(Agent.OS)" | caching-docker.yml'
+              path: $(Pipeline.Workspace)/docker
               cacheHitVar: DOCKER_CACHE_RESTORED
-            displayName: Cache Docker images
+            displayName: Caching Docker image
 
           - script: |
-              gunzip -c $(Pipeline.Workspace)/dockerImages/cache.tar.gz | docker load
-            displayName: Restore Docker image cache
+              docker load < $(Pipeline.Workspace)/docker/aspnet5.tar
+              docker load < $(Pipeline.Workspace)/docker/sdk5.tar
             condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
 
           - script: |
-              mkdir $(Pipeline.Workspace)/dockerImages
-              for fn in ${{ parameters.cacheImages }}
-              do
-                docker pull -q $fn
-              done
-              docker save ${{ parameters.cacheImages }} | gzip -9c &gt; $(Pipeline.Workspace)/dockerImages/cache.tar.gz
-            displayName: Populate docker image cache
+              mkdir -p $(Pipeline.Workspace)/docker
+              docker pull mcr.microsoft.com/dotnet/aspnet:5.0
+              docker pull mcr.microsoft.com/dotnet/sdk:5.0
+              docker save mcr.microsoft.com/dotnet/aspnet:5.0 > $(Pipeline.Workspace)/docker/aspnet5.tar
+              docker save mcr.microsoft.com/dotnet/sdk:5.0 > $(Pipeline.Workspace)/docker/sdk5.tar
             condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
 
           - task: UseDotNet@2
