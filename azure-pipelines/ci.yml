@@ -22,7 +22,7 @@ stages:
               key: 'docker | "$(Agent.OS)" | cacheImages'
               path: $(Pipeline.Workspace)/docker
               cacheHitVar: DOCKER_CACHE_RESTORED
-            displayName: Caching Docker image
+            displayName: Caching Docker imagee
 
           - script: |
               docker load < $(Pipeline.Workspace)/docker/aspnet5.tar
