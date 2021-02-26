@@ -4,63 +4,89 @@ stages:
       - name: app.root
         value: $(System.DefaultWorkingDirectory)/src
       - name: app.imageName
-        value: 'iel182/estudo-docker'
+        value: "iel182/estudo-docker"
+
+      - name: cacheImages
+        type: string
+        default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
 
     jobs:
       - job: Build
         steps:
           - checkout: self
-          
+
+          - task: Cache@2
+            inputs:
+              key: docker | **/Dockerfile | "${{ parameters.cacheImages }}"
+              path: $(Pipeline.Workspace)/docker
+              cacheHitVar: DOCKER_CACHE_RESTORED
+            displayName: Cache Docker images
+
+          - script: |
+              gunzip -c $(Pipeline.Workspace)/docker/cache.tar.gz | docker load
+            displayName: Restore Docker image cache
+            condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
+
+          - script: |
+              mkdir -p $(Pipeline.Workspace)/docker
+              for fn in ${{ parameters.cacheImages }}
+              do
+                docker pull -q $fn
+              done
+              docker save ${{ parameters.cacheImages }} | gzip -9c &gt; $(Pipeline.Workspace)/docker/cache.tar.gz
+            displayName: Populate docker image cache
+            condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+
           - task: UseDotNet@2
             displayName: dotnet install
-            inputs: 
-              version: '5.0.x'
+            inputs:
+              version: "5.0.x"
               packageType: runtime
 
           - task: DotNetCoreCLI@2
             displayName: dotnet build
             inputs:
               command: build
-              projects: '$(app.root)/LearnAzureDevOps.sln'
-              arguments: '--configuration Release'
+              projects: "$(app.root)/LearnAzureDevOps.sln"
+              arguments: "--configuration Release"
 
           - task: DotNetCoreCLI@2
             displayName: dotnet test
             inputs:
               command: test
-              projects: '$(app.root)/LearnAzureDevOps.sln'
-              arguments: '--configuration Release --no-build /p:CollectCoverage=true /p:ConverletOutputFormat=opencover'
+              projects: "$(app.root)/LearnAzureDevOps.sln"
+              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:ConverletOutputFormat=opencover"
               publishTestResult: true
 
           - task: PublishCodeCoverageResults@1
-            displayName: 'publish code coverage report'
+            displayName: "publish code coverage report"
             inputs:
-              codeCoverageTool: 'Cobertura'
-              summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+              codeCoverageTool: "Cobertura"
+              summaryFileLocation: "$(Build.SourcesDirectory)/**/coverage.cobertura.xml"
 
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
             inputs:
               command: publish
-              projects: '$(app.root)/LearnAzureDevOps/LearnAzureDevOps.csproj'
-              arguments: '--configuration Release --no-build --output $(System.Default.WorkingDirectory)/publish'
+              projects: "$(app.root)/LearnAzureDevOps/LearnAzureDevOps.csproj"
+              arguments: "--configuration Release --no-build --output $(System.Default.WorkingDirectory)/publish"
               publishWebProjects: true
               zipAfterPublish: false
               modifyOutputPath: false
-          
+
           - task: Docker@2
             displayName: docker build image
             inputs:
-             repository: $(app.imageName)
-             command: build
-             Dockerfile: $(app.root)/LearnAzureDevOps/Dockerfile
-             tags: 'v$(Build.BuildNumber)' 
+              repository: $(app.imageName)
+              command: build
+              Dockerfile: $(app.root)/LearnAzureDevOps/Dockerfile
+              tags: "v$(Build.BuildNumber)"
 
           - task: Docker@2
             displayName: docker push image
-            inputs:        
-              command: push              
+            inputs:
+              command: push
               containerRegistry: cd-docker-hub
               repository: $(app.imageName)
               includeLatestTag: true
-              tags: 'v$(Build.BuildNumber)'              
+              tags: "v$(Build.BuildNumber)"
