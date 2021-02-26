@@ -1,3 +1,8 @@
+parameters:
+  - name: cacheImages
+    type: string
+    default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
+
 stages:
   - stage: ci
     variables:
@@ -8,11 +13,6 @@ stages:
 
     jobs:
       - job: Build
-
-        parameters:
-          - name: cacheImages
-            type: string
-            default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
 
         steps:
           - checkout: self
