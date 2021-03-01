@@ -12,7 +12,7 @@ stages:
       - name: app.imageName
         value: "iel182/estudo-docker"
 
-      - app.docker.serviceconnection: $(DOCKER_HUB_SERVICE_CONNECTION)
+        app.docker.serviceconnection: $(DOCKER_HUB_SERVICE_CONNECTION)
 
     jobs:
       - job: Build
