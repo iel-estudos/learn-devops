@@ -6,6 +6,7 @@ parameters:
 stages:
   - stage: ci
     variables:
+      - group: LearnDevops - Docker
       - name: app.root
         value: $(System.DefaultWorkingDirectory)/src
       - name: app.imageName
@@ -88,7 +89,7 @@ stages:
             displayName: docker push image
             inputs:
               command: push
-              containerRegistry: cd-docker-hub
+              containerRegistry: $(DOCKER_HUB_SERVICE_CONNECTION)
               repository: $(app.imageName)
               includeLatestTag: true
               tags: "v$(Build.BuildNumber)"
