@@ -5,12 +5,18 @@ parameters:
 
 stages:
   - stage: ci
+
     variables:
       - group: LearnDevops - Docker
+
       - name: app.root
         value: $(System.DefaultWorkingDirectory)/src
+
       - name: app.imageName
         value: "iel182/estudo-docker"
+
+      - name: app.docker.serviceconnection
+        value: cd-docker-hub
 
         app.docker.serviceconnection: $(DOCKER_HUB_SERVICE_CONNECTION)
 
