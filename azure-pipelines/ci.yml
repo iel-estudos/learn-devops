@@ -18,8 +18,6 @@ stages:
       - name: app.docker.serviceconnection
         value: cd-docker-hub
 
-        app.docker.serviceconnection: $(DOCKER_HUB_SERVICE_CONNECTION)
-
     jobs:
       - job: Build
 
