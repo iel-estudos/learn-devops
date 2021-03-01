@@ -1,5 +1,4 @@
 parameters:
-  - group: LearnDevops - Docker
   - name: cacheImages
     type: string
     default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
