@@ -7,7 +7,7 @@ pool:
   vmImage: ubuntu-18.04
 
 variables:
-  group: LearnDevops - Docker
+  group: "LearnDevops - Docker"
   configuration.dockerhub.test: $(DOCKER_HUB_SERVICE_CONNECTION)
 
 stages:
