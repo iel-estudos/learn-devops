@@ -11,6 +11,8 @@ stages:
         value: $(System.DefaultWorkingDirectory)/src
       - name: app.imageName
         value: "iel182/estudo-docker"
+      - name: app.docker.serviceconnection
+        value: "$(DOCKER_HUB_SERVICE_CONNECTION)"
 
     jobs:
       - job: Build
@@ -89,7 +91,7 @@ stages:
             displayName: docker push image
             inputs:
               command: push
-              containerRegistry: $(DOCKER_HUB_SERVICE_CONNECTION)
+              containerRegistry: $(app.docker.serviceconnection)
               repository: $(app.imageName)
               includeLatestTag: true
               tags: "v$(Build.BuildNumber)"
