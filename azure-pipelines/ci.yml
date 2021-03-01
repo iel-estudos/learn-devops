@@ -15,9 +15,6 @@ stages:
       - name: app.imageName
         value: "iel182/estudo-docker"
 
-      - name: app.docker.serviceconnection
-        value: "cd-docker-hub"
-
     jobs:
       - job: Build
 
@@ -95,7 +92,7 @@ stages:
             displayName: docker push image
             inputs:
               command: push
-              containerRegistry: $(app.docker.serviceconnection)
+              containerRegistry: $(configuration.dockerhub.test)
               repository: $(app.imageName)
               includeLatestTag: true
               tags: "v$(Build.BuildNumber)"
