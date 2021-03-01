@@ -11,8 +11,8 @@ stages:
         value: $(System.DefaultWorkingDirectory)/src
       - name: app.imageName
         value: "iel182/estudo-docker"
-      - name: app.docker.serviceconnection
-        value: $(DOCKER_HUB_SERVICE_CONNECTION)
+
+      - app.docker.serviceconnection: $(DOCKER_HUB_SERVICE_CONNECTION)
 
     jobs:
       - job: Build
