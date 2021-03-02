@@ -9,7 +9,7 @@ pool:
 variables:
   - group: LearnDevops - Docker
   - name: configuration.dockerhub.connection
-    value: cd-docker-hub
+    value: $(DOCKER_HUB_SERVICE_CONNECTION)
 
 stages:
   - template: azure-pipelines/ci.yml
