@@ -8,7 +8,7 @@ pool:
 
 variables:
   configuration.dockerhub.token: asdasdas
-
+  configuration.dockerhub.connection: cd-docker-hub
 stages:
   - template: azure-pipelines/ci.yml
 #- template: azure-pipelines/cd-dev.yml
