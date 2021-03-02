@@ -16,7 +16,7 @@ stages:
         value: "iel182/estudo-docker"
 
       - name: configuration.dockerhub.connection
-        value: "cd-docker-hub"
+        value: cd-docker-hub
 
     jobs:
       - job: Build
