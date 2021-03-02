@@ -7,8 +7,10 @@ pool:
   vmImage: ubuntu-18.04
 
 variables:
-  configuration.dockerhub.token: asdasdas
-  configuration.dockerhub.connection: cd-docker-hub
+  - group: LearnDevops - Docker
+  - name: configuration.dockerhub.connection
+    value: cd-docker-hub
+
 stages:
   - template: azure-pipelines/ci.yml
 #- template: azure-pipelines/cd-dev.yml
