@@ -11,6 +11,12 @@ variables:
   - name: configuration.dockerhub.connection
     value: $(DOCKER_HUB_SERVICE_CONNECTION)
 
+  - group: LearnDevops - Sonar
+  - name: configuration.sonar.connection
+    value: $(SONAR_SERVICE_CONNECTION)
+  - name: configuration.sonar.organization
+    value: $(SONAR_ORGANIZATION)
+
 stages:
   - template: azure-pipelines/ci.yml
 #- template: azure-pipelines/cd-dev.yml

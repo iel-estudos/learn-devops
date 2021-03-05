@@ -10,9 +10,33 @@ stages:
       - name: app.root
         value: $(System.DefaultWorkingDirectory)/src
 
-      - name: app.imageName
+      - name: configuration.docker.imageName
         value: "iel182/estudo-docker"
 
+      - name: configuration.cache.package
+        value: $(Pipeline.Workspace)/.nuget/packages
+
+      - group: LearnDevops - Sonar
+      - name: configuration.sonar.extraProperties
+        ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+          value: |
+            sonar.pullrequest.key=$(System.PullRequest.PullRequestNumber)
+            sonar.pullrequest.branch=$(System.PullRequest.SourceBranch)
+            sonar.pullrequest.base=$(System.PullRequest.TargetBranch)
+        ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+          value: sonar.branch.name=$(Build.SourceBranchName)
+
+      - name: configuration.sonar.projectsettings
+        value: $(app.root)/sonar-project.properties
+
+      - name: configuration.sonar.projectkey
+        value: $(SONAR_KEY)
+
+      - name: configuration.sonar.projectname
+        value: $(SONAR_PROJECT_NAME)
+
+      - name: configuration.sonar.coveragereport
+        value: $(app.root)/**/coverage.cobertura.xml"
     jobs:
       - job: Build
 
@@ -20,11 +44,20 @@ stages:
           - checkout: self
 
           - task: Cache@2
+            displayName: "cache nuget packages"
+            inputs:
+              key: 'nuget | "$(Agent.OS)" | **/packages.lock.json, !bin/**'
+              restoreKeys: |
+                nuget | "$(Agent.OS)"
+                nuget
+              path: $(configuration.cache.package)
+
+          - task: Cache@2
+            displayName: Caching Docker image
             inputs:
               key: 'docker | "$(Agent.OS)" | cacheImages'
               path: $(Pipeline.Workspace)/docker
               cacheHitVar: DOCKER_CACHE_RESTORED
-            displayName: Caching Docker imagee
 
           - script: |
               docker load < $(Pipeline.Workspace)/docker/aspnet5.tar
@@ -40,6 +73,20 @@ stages:
               docker save mcr.microsoft.com/dotnet/sdk:5.0 > $(Pipeline.Workspace)/docker/sdk5.tar
             condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
             displayName: docker image cache
+
+          - task: SonarCloudPrepare@1
+            displayName: "sonar prepare"
+            enabled: true
+            inputs:
+              scannerMode: "MSBuild"
+              SonarCloud: "$(configuration.sonar.connection)"
+              organization: "$(configuration.sonar.organization)"
+              projectKey: "$(configuration.sonar.projectkey)"
+              projectName: "$(configuration.sonar.projectname)"
+              extraProperties: |
+                project.settings=$(configuration.sonar.projectsettings)
+                sonar.projectBaseDir=$(app.root)                         
+                $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
             displayName: dotnet install
@@ -63,10 +110,10 @@ stages:
               publishTestResult: true
 
           - task: PublishCodeCoverageResults@1
-            displayName: "publish code coverage report"
+            displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"
-              summaryFileLocation: "$(Build.SourcesDirectory)/**/coverage.cobertura.xml"
+              summaryFileLocation:
 
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
@@ -81,7 +128,7 @@ stages:
           - task: Docker@2
             displayName: docker build image
             inputs:
-              repository: $(app.imageName)
+              repository: $(configuration.docker.imageName)
               command: build
               Dockerfile: $(app.root)/LearnAzureDevOps/Dockerfile
               tags: "v$(Build.BuildNumber)"
@@ -91,6 +138,6 @@ stages:
             inputs:
               command: push
               containerRegistry: $(configuration.dockerhub.connection)
-              repository: $(app.imageName)
+              repository: $(configuration.docker.imageName)
               includeLatestTag: true
               tags: "v$(Build.BuildNumber)"
