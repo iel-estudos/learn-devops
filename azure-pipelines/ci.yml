@@ -113,7 +113,7 @@ stages:
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"
-              summaryFileLocation:
+              summaryFileLocation: $(configuration.sonar.coveragereport)
 
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
