@@ -106,7 +106,7 @@ stages:
             inputs:
               command: test
               projects: "$(app.root)/LearnAzureDevOps.sln"
-              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:ConverletOutputFormat=opencover"
+              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
               publishTestResult: true
 
           - task: PublishCodeCoverageResults@1
