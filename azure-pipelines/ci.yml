@@ -81,8 +81,6 @@ stages:
               scannerMode: "MSBuild"
               SonarCloud: "$(configuration.sonar.connection)"
               organization: "$(configuration.sonar.organization)"
-              projectKey: "$(configuration.sonar.projectkey)"
-              projectName: "$(configuration.sonar.projectname)"
               extraProperties: |
                 project.settings=$(configuration.sonar.projectsettings)
                 sonar.projectBaseDir=$(app.root)                         
