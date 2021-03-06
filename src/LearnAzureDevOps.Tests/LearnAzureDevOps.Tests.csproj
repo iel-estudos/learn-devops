@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+    <ItemGroup>
+    <ProjectReference Include="..\LearnAzureDevOps\LearnAzureDevOps.csproj" />    
+  </ItemGroup>
+
 </Project>

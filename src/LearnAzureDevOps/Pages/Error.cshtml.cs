@@ -19,6 +19,10 @@ namespace LearnAzureDevOps.Pages
 
         private readonly ILogger<ErrorModel> _logger;
 
+        public ErrorModel()
+        {
+
+        }
         public ErrorModel(ILogger<ErrorModel> logger)
         {
             _logger = logger;
