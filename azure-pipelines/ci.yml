@@ -115,12 +115,10 @@ stages:
             inputs:
               script: |
                 echo "Structure of work folder of this pipeline:"
-                tree $(Agent.WorkFolder)\1 /f
+                tree $(app.root)/LearnAzureDevOps.Tests /f
                 echo "Build.ArtifactStagingDirectory: $(Build.ArtifactStagingDirectory)"                
                 echo "Build.BinariesDirectory: $(Build.BinariesDirectory)"                
                 echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
-                echo ls $(app.root)/LearnAzureDevOps.Tests"
-                echo tree $(app.root) /f  prn
 
           - task: SonarCloudPublish@1
             displayName: sonar publish
