@@ -109,7 +109,6 @@ stages:
               projects: "$(app.root)/LearnAzureDevOps.sln"
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
               publishTestResult: true
-              sonarQubeRunAnalysis: true
 
           - task: CmdLine@2
             inputs:
@@ -119,6 +118,10 @@ stages:
                 echo "Build.ArtifactStagingDirectory: $(Build.ArtifactStagingDirectory)"                
                 echo "Build.BinariesDirectory: $(Build.BinariesDirectory)"                
                 echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
+
+          - task: SonarCloudAnalyze@1
+            enabled: true
+            displayName: "Sonar Analyze"
 
           - task: SonarCloudPublish@1
             displayName: sonar publish
