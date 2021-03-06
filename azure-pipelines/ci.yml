@@ -84,8 +84,10 @@ stages:
               projectKey: "$(configuration.sonar.projectkey)"
               projectName: "$(configuration.sonar.projectname)"
               extraProperties: |
-                project.settings=$(configuration.sonar.projectsettings)
                 sonar.projectBaseDir=$(app.root)
+                sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
+                sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
+                sonar.cs.opencover.reportsPaths=$(app.root)**/coverage.opencover.xml
                 $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
