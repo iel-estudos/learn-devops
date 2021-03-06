@@ -121,6 +121,7 @@ stages:
             inputs:
               codeCoverageTool: "Cobertura"
               summaryFileLocation: $(configuration.sonar.coveragereport)
+              failIfCoverageEmpty: true
 
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
