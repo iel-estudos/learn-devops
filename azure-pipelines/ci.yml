@@ -36,7 +36,7 @@ stages:
         value: $(SONAR_PROJECT_NAME)
 
       - name: configuration.sonar.coveragereport
-        value: $(app.root)/**/coverage.opencover.xml"
+        value: $(app.root)/LearnAzureDevOps.Tests/coverage.opencover.xml"
     jobs:
       - job: Build
 
