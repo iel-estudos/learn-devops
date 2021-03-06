@@ -4,7 +4,7 @@ parameters:
     default: mcr.microsoft.com/dotnet/sdk:5.0 mcr.microsoft.com/dotnet/aspnet:5.0
 
 stages:
-  - stage: ci
+  - stage: CI
 
     variables:
       - name: app.root
@@ -36,7 +36,7 @@ stages:
         value: $(SONAR_PROJECT_NAME)
 
       - name: configuration.sonar.coveragereport
-        value: $(app.root)/**/coverage.cobertura.xml"
+        value: $(app.root)/**/coverage.opencover.xml"
     jobs:
       - job: Build
 
@@ -106,8 +106,9 @@ stages:
             inputs:
               command: test
               projects: "$(app.root)/LearnAzureDevOps.sln"
-              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=Cobertura"
+              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
               publishTestResult: true
+              sonarQubeRunAnalysis: true
 
           - task: PublishCodeCoverageResults@1
             displayName: "publish coverage report"
