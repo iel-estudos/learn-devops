@@ -8,7 +8,7 @@ stages:
 
     variables:
       - name: app.root
-        value: $(System.DefaultWorkingDirectory)/src
+        value: $(Build.SourcesDirectory)/src
 
       - name: configuration.docker.imageName
         value: "iel182/estudo-docker"
