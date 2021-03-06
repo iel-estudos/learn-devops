@@ -2,9 +2,9 @@
 <CoverageSession>
   <Summary numSequencePoints="57" visitedSequencePoints="4" numBranchPoints="26" visitedBranchPoints="0" sequenceCoverage="7.01" branchCoverage="0" maxCyclomaticComplexity="23" minCyclomaticComplexity="19" visitedClasses="1" numClasses="11" visitedMethods="3" numMethods="21" />
   <Modules>
-    <Module hash="67CAC546-D311-4B60-9D97-A36A4C7496B4">
+    <Module hash="B21343D9-EA5E-4720-B2FF-B4AB0211F402">
       <ModulePath>LearnAzureDevOps.dll</ModulePath>
-      <ModuleTime>2021-03-06T03:00:55</ModuleTime>
+      <ModuleTime>2021-03-06T03:49:40</ModuleTime>
       <ModuleName>LearnAzureDevOps</ModuleName>
       <Files>
         <File uid="1" fullPath="C:\Users\danielsr\Documents\github\learn-devops\src\LearnAzureDevOps\Program.cs" />
@@ -249,9 +249,9 @@
         </Class>
       </Classes>
     </Module>
-    <Module hash="421AC6AE-7CEE-4D81-88D8-48DDE83CED8D">
+    <Module hash="CD237229-DD85-4CD1-A018-A4303A635D75">
       <ModulePath>LearnAzureDevOps.Views.dll</ModulePath>
-      <ModuleTime>2021-03-06T03:00:55</ModuleTime>
+      <ModuleTime>2021-03-06T03:49:40</ModuleTime>
       <ModuleName>LearnAzureDevOps.Views</ModuleName>
       <Files>
         <File uid="6" fullPath="C:\Users\danielsr\Documents\github\learn-devops\src\LearnAzureDevOps\Pages\Error.cshtml" />

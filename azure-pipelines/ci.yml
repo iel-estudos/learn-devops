@@ -130,6 +130,7 @@ stages:
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"
+              pathToSources: $(app.root)
               summaryFileLocation: $(configuration.sonar.coveragereport)
               failIfCoverageEmpty: true
 
