@@ -85,7 +85,7 @@ stages:
               projectName: "$(configuration.sonar.projectname)"
               extraProperties: |
                 project.settings=$(configuration.sonar.projectsettings)
-                sonar.projectBaseDir=$(app.root)                         
+                sonar.projectBaseDir=$(app.root)
                 $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
