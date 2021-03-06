@@ -110,6 +110,12 @@ stages:
               publishTestResult: true
               sonarQubeRunAnalysis: true
 
+          - task: SonarCloudPublish@1
+            displayName: sonar publish
+            enabled: true
+            inputs:
+              pollingTimeoutSec: 300
+
           - task: PublishCodeCoverageResults@1
             displayName: "publish coverage report"
             inputs:
