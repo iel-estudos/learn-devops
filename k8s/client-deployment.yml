@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: iel182/estudo-docker:v20210208.1
+          image: iel182/estudo-docker:v20210226.8
           resources:
             limits:
               memory: "80Mi"
