@@ -111,7 +111,7 @@ stages:
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
               publishTestResult: true
               sonarQubeRunAnalysis: true
-              
+
           - task: CmdLine@2
             inputs:
               script: |
@@ -132,7 +132,7 @@ stages:
             inputs:
               codeCoverageTool: "Cobertura"
               pathToSources: $(app.root)
-              summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
+              summaryFileLocation: "$(app.root)/LearnAzureDevOps.Tests/coverage.opencover.xml"
               failIfCoverageEmpty: true
 
           - task: DotNetCoreCLI@2
