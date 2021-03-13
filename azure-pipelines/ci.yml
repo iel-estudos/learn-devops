@@ -84,9 +84,10 @@ stages:
               projectKey: "$(configuration.sonar.projectkey)"
               projectName: "$(configuration.sonar.projectname)"
               extraProperties: |
-                project.settings=$(configuration.sonar.projectsettings)
-                sonar.projectBaseDir=$(app.root)
                 sonar.sources=$(app.root)
+                sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
+                sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
+                sonar.cs.opencover.reportsPaths=$(app.root)/**/coverage.opencover.xml
                 $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
@@ -109,7 +110,8 @@ stages:
               projects: "$(app.root)/LearnAzureDevOps.sln"
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
               publishTestResult: true
-
+              sonarQubeRunAnalysis: true
+              
           - task: CmdLine@2
             inputs:
               script: |
@@ -118,10 +120,6 @@ stages:
                 echo "Build.ArtifactStagingDirectory: $(Build.ArtifactStagingDirectory)"                
                 echo "Build.BinariesDirectory: $(Build.BinariesDirectory)"                
                 echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
-
-          - task: SonarCloudAnalyze@1
-            enabled: true
-            displayName: "Sonar Analyze"
 
           - task: SonarCloudPublish@1
             displayName: sonar publish
@@ -134,7 +132,7 @@ stages:
             inputs:
               codeCoverageTool: "Cobertura"
               pathToSources: $(app.root)
-              summaryFileLocation: $(configuration.sonar.coveragereport)
+              summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
               failIfCoverageEmpty: true
 
           - task: DotNetCoreCLI@2
