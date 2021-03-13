@@ -121,19 +121,18 @@ stages:
                 echo "Build.BinariesDirectory: $(Build.BinariesDirectory)"                
                 echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
 
+          - task: PublishCodeCoverageResults@1
+            displayName: "publish coverage report"
+            inputs:
+              codeCoverageTool: "Cobertura"              
+              summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
+              failIfCoverageEmpty: true
+
           - task: SonarCloudPublish@1
             displayName: sonar publish
             enabled: true
             inputs:
               pollingTimeoutSec: 300
-
-          - task: PublishCodeCoverageResults@1
-            displayName: "publish coverage report"
-            inputs:
-              codeCoverageTool: "Cobertura"
-              pathToSources: $(app.root)
-              summaryFileLocation: "$(app.root)/LearnAzureDevOps.Tests/coverage.opencover.xml"
-              failIfCoverageEmpty: true
 
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
