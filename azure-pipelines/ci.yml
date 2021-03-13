@@ -87,7 +87,7 @@ stages:
                 sonar.sources=$(app.root)
                 sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
                 sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
-                sonar.cs.opencover.reportsPaths=$(app.root)/**/coverage.opencover.xml
+                sonar.cs.opencover.reportsPaths="$(app.root)/**/coverage.cobertura.xml"
                 $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
@@ -126,10 +126,6 @@ stages:
               codeCoverageTool: "Cobertura"              
               summaryFileLocation: "$(app.root)/**/coverage.cobertura.xml"
          
-          - task: SonarCloudAnalyze@1
-            enabled: true
-            displayName: "Sonar Analyze"    
-
           - task: SonarCloudPublish@1
             displayName: sonar publish
             enabled: true
