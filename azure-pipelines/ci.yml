@@ -127,6 +127,10 @@ stages:
               codeCoverageTool: "Cobertura"              
               summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
          
+          - task: SonarCloudAnalyze@1
+            enabled: true
+            displayName: "Sonar Analyze"    
+
           - task: SonarCloudPublish@1
             displayName: sonar publish
             enabled: true
