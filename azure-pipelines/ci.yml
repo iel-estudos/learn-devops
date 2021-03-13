@@ -86,6 +86,7 @@ stages:
               extraProperties: |
                 sonar.sources=$(app.root)
                 sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
+                sonar.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json,**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
                 sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
                 sonar.cs.opencover.reportsPaths="$(app.root)/**/coverage.cobertura.xml"
                 $(configuration.sonar.extraProperties)
@@ -110,6 +111,7 @@ stages:
               projects: "$(app.root)/LearnAzureDevOps.sln"
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(app.root)/TestResults/Coverage/"                         
               publishTestResults: true
+              sonarQubeRunAnalysis: true
               
           - task: CmdLine@2
             inputs:
