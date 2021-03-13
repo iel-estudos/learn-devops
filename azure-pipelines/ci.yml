@@ -109,9 +109,8 @@ stages:
               command: test
               projects: "$(app.root)/LearnAzureDevOps.sln"
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
-              publishTestResult: true
-              sonarQubeRunAnalysis: true
-
+              publishTestResults: true
+              
           - task: CmdLine@2
             inputs:
               script: |
