@@ -113,18 +113,22 @@ stages:
               publishTestResults: true
               sonarQubeRunAnalysis: true
 
-          - task: SonarCloudPublish@1
-            displayName: sonar publish
-            enabled: true
-            inputs:
-              pollingTimeoutSec: 300
-              
           - task: PublishCodeCoverageResults@1
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"              
               summaryFileLocation: "$(app.root)/**/coverage.cobertura.xml"
          
+          - task: SonarCloudAnalyze@1
+            enabled: true
+            displayName: "sonar publish"
+
+          - task: SonarCloudPublish@1
+            displayName: sonar publish
+            enabled: true
+            inputs:
+              pollingTimeoutSec: 300
+
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
             inputs:
