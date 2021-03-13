@@ -39,7 +39,15 @@ stages:
         value: "$(app.root)/**/coverage.cobertura.xml"
 
       - name: configuration.sonar.exclusions
-        value: ""
+        value: |          
+          **/bin/**,
+          **/obj/**,
+          **/wwwroot/**,
+          **/*.json,
+          **/*Test*.cs, 
+          **/Tests*/, 
+          **/Startup.cs, 
+          **/Program.cs
 
       - name: configuration.sonar.exclusions.duplication
         value: |          
