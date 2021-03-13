@@ -83,8 +83,7 @@ stages:
               organization: "$(configuration.sonar.organization)"
               projectKey: "$(configuration.sonar.projectkey)"
               projectName: "$(configuration.sonar.projectname)"
-              extraProperties: |
-                sonar.sources=$(app.root)
+              extraProperties: |            
                 sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
                 sonar.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json,**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
                 sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
