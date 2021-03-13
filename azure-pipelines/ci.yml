@@ -112,28 +112,19 @@ stages:
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(app.root)/TestResults/Coverage/"                         
               publishTestResults: true
               sonarQubeRunAnalysis: true
-              
-          - task: CmdLine@2
-            inputs:
-              script: |
-                echo "Structure of work folder of this pipeline:"
-                tree $(app.root)/LearnAzureDevOps.Tests /f
-                echo "Build.ArtifactStagingDirectory: $(Build.ArtifactStagingDirectory)"                
-                echo "Build.BinariesDirectory: $(Build.BinariesDirectory)"                
-                echo "Build.SourcesDirectory: $(Build.SourcesDirectory)"
 
+          - task: SonarCloudPublish@1
+            displayName: sonar publish
+            enabled: true
+            inputs:
+              pollingTimeoutSec: 300
+              
           - task: PublishCodeCoverageResults@1
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"              
               summaryFileLocation: "$(app.root)/**/coverage.cobertura.xml"
          
-          - task: SonarCloudPublish@1
-            displayName: sonar publish
-            enabled: true
-            inputs:
-              pollingTimeoutSec: 300
-
           - task: DotNetCoreCLI@2
             displayName: dotnet publih
             inputs:
