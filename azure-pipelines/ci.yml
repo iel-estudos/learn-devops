@@ -126,8 +126,7 @@ stages:
             inputs:
               codeCoverageTool: "Cobertura"              
               summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
-              failIfCoverageEmpty: true
-
+         
           - task: SonarCloudPublish@1
             displayName: sonar publish
             enabled: true
