@@ -13,8 +13,8 @@ stages:
       - name: configuration.docker.imageName
         value: "iel182/estudo-docker"
 
-      - name: configuration.cache.package
-        value: $(Pipeline.Workspace)/.nuget/packages
+      - name: configuration.publish.output
+        value: "$(System.Default.WorkingDirectory)/publish"
 
       - group: LearnDevops - Sonar
       - name: configuration.sonar.extraProperties
@@ -26,9 +26,6 @@ stages:
         ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
           value: sonar.branch.name=$(Build.SourceBranchName)
 
-      - name: configuration.sonar.projectsettings
-        value: $(app.root)/sonar-project.properties
-
       - name: configuration.sonar.projectkey
         value: $(SONAR_KEY)
 
@@ -36,21 +33,44 @@ stages:
         value: $(SONAR_PROJECT_NAME)
 
       - name: configuration.sonar.coveragereport
-        value: "$(app.root)/**/coverage.opencover.xml"
+        value: "$(app.root)/**/coverage.cobertura.xml"
+
+      - name: configuration.sonar.coveragereport
+        value: "$(app.root)/**/coverage.cobertura.xml"
+
+      - name: configuration.sonar.exclusions
+        value: ""
+
+      - name: configuration.sonar.exclusions.duplication
+        value: |          
+          **/bin/**,
+          **/obj/**,
+          **/wwwroot/**,
+          **/*.json,
+          **/*Test*.cs, 
+          **/Tests*/, 
+          **/Startup.cs, 
+          **/Program.cs
+
+      - name: configuration.sonar.exclusions.coverage
+        value: |          
+          **/bin/**,
+          **/obj/**,
+          **/wwwroot/**,
+          **/*.json,
+          **/*Test*.cs, 
+          **/Tests*/, 
+          **/Startup.cs, 
+          **/Program.cs
+
+      - name: configuration.sonar.coverage.output
+        value: "$(app.root)/TestResults/Coverage/"
+
     jobs:
       - job: Build
 
         steps:
           - checkout: self
-
-          # - task: Cache@2
-          #   displayName: "cache nuget packages"
-          #   inputs:
-          #     key: 'nuget | "$(Agent.OS)" | **/packages.lock.json, !bin/**'
-          #     restoreKeys: |
-          #       nuget | "$(Agent.OS)"
-          #       nuget
-          #     path: $(configuration.cache.package)
 
           - task: Cache@2
             displayName: Caching Docker image
@@ -84,10 +104,10 @@ stages:
               projectKey: "$(configuration.sonar.projectkey)"
               projectName: "$(configuration.sonar.projectname)"
               extraProperties: |            
-                sonar.cpd.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json
-                sonar.exclusions=**/Migrations/*.cs,**/bin/**,**/obj/**,**/wwwroot/**,**/*.json,**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
-                sonar.coverage.exclusions=**/*Test*.cs, **/Tests*/, **/Startup.cs, **/Program.cs
-                sonar.cs.opencover.reportsPaths="$(app.root)/**/coverage.cobertura.xml"
+                sonar.cpd.exclusions=$(configuration.sonar.exclusions.duplication)
+                sonar.exclusions=$(configuration.sonar.exclusions)
+                sonar.coverage.exclusions=$(configuration.sonar.exclusions.coverage)
+                sonar.cs.opencover.reportsPaths="$(configuration.sonar.coveragereport)"
                 $(configuration.sonar.extraProperties)
 
           - task: UseDotNet@2
@@ -108,7 +128,7 @@ stages:
             inputs:
               command: test
               projects: "$(app.root)/LearnAzureDevOps.sln"
-              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(app.root)/TestResults/Coverage/"                         
+              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(configuration.sonar.coverage.output)"                         
               publishTestResults: true
               sonarQubeRunAnalysis: true
 
@@ -116,11 +136,11 @@ stages:
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"              
-              summaryFileLocation: "$(app.root)/**/coverage.cobertura.xml"
+              summaryFileLocation: "$(configuration.sonar.coveragereport)"
          
           - task: SonarCloudAnalyze@1
             enabled: true
-            displayName: "sonar publish"
+            displayName: "sonar analyze"
 
           - task: SonarCloudPublish@1
             displayName: sonar publish
@@ -133,7 +153,7 @@ stages:
             inputs:
               command: publish
               projects: "$(app.root)/LearnAzureDevOps/LearnAzureDevOps.csproj"
-              arguments: "--configuration Release --no-build --output $(System.Default.WorkingDirectory)/publish"
+              arguments: "--configuration Release --no-build --output $(configuration.publish.output)"
               publishWebProjects: true
               zipAfterPublish: false
               modifyOutputPath: false
