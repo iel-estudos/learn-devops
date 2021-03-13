@@ -108,7 +108,7 @@ stages:
             inputs:
               command: test
               projects: "$(app.root)/LearnAzureDevOps.sln"
-              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover"
+              arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(app.root)/TestResults/Coverage/"                         
               publishTestResults: true
               
           - task: CmdLine@2
@@ -124,7 +124,7 @@ stages:
             displayName: "publish coverage report"
             inputs:
               codeCoverageTool: "Cobertura"              
-              summaryFileLocation: "$(app.root)/**/coverage.opencover.xml"
+              summaryFileLocation: "$(app.root)/**/coverage.cobertura.xml"
          
           - task: SonarCloudAnalyze@1
             enabled: true
