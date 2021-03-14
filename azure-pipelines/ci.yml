@@ -15,6 +15,9 @@ stages:
 
       - name: configuration.publish.output
         value: "$(System.Default.WorkingDirectory)/publish"
+      
+      - name: configuration.project.path
+        value: "$(app.root)/LearnAzureDevOps.sln"
 
       - group: LearnDevops - Sonar
       - name: configuration.sonar.extraProperties
@@ -128,14 +131,14 @@ stages:
             displayName: dotnet build
             inputs:
               command: build
-              projects: "$(app.root)/LearnAzureDevOps.sln"
+              projects: "$(configuration.project.path)"
               arguments: "--configuration Release"
 
           - task: DotNetCoreCLI@2
             displayName: dotnet test
             inputs:
               command: test
-              projects: "$(app.root)/LearnAzureDevOps.sln"
+              projects: "$(configuration.project.path)"
               arguments: "--configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(configuration.sonar.coverage.output)"                         
               publishTestResults: true
               sonarQubeRunAnalysis: true
