@@ -4,7 +4,7 @@ metadata:
   name: client-deployment
   namespace: learn-devops
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       component: web
@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
         - name: client
-          image: iel182/estudo-docker:v20210226.8
+          image: iel182/estudo-docker:v20210314.2
           resources:
             limits:
-              memory: "80Mi"
+              memory: "50Mi"
               cpu: "150m"
           ports:
             - containerPort: 80
