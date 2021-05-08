@@ -1,5 +1,12 @@
+  
+trigger:
+  branches:
+    include:
+      - master
+
 pool:
-  name: Azure Pipelines
+  vmImage: ubuntu-18.04
+  
 variables:
   publishdir: '$(System.DefaultWorkingDirectory)/publish'
   build.number: '$(Build.BuildNumber)'
