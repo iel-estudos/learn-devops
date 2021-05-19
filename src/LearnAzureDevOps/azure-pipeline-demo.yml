@@ -1,0 +1,47 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: ubuntu-18.04
+  
+variables:
+  publishdir: '$(System.DefaultWorkingDirectory)/publish'
+  build.number: '$(Build.BuildNumber)'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore 🗳️'
+  inputs:
+    command: restore
+    projects: src/LearnAzureDevOps.sln
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build ⚙️'
+  inputs:
+    projects: src/LearnAzureDevOps.sln
+    arguments: '--configuration Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test 🧪'
+  inputs:
+    command: test
+    projects: src/LearnAzureDevOps.Tests/LearnAzureDevOps.Tests.csproj
+
+- task: Docker@2
+  displayName: buildAndPush
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    arguments: '--configuration Release --no-build --output $(publishdir)/$(build.number).zip'
+    modifyOutputPath: false
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/LearnAzureDevOps'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: '$(publishdir)'
+    artifact: '$(build.number).zip'
